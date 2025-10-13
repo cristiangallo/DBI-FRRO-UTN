@@ -119,20 +119,29 @@ WHERE P.dni NOT IN (
   INNER JOIN titulos T ON PT.cod_titulo = T.cod_titulo
   WHERE T.tipo_titulo IN ('Educacion no formal', 'Terciario'));
 
-
-
-
-
-
-
-
 -- 7) Mostrar los empleados cuyo salario supere al promedio de sueldo de la empresa que los
 -- contrató.
 -- |cuit |dni |sueldo |prom
 
+-- Error Code: 1050. Table 'tt_sueldo_prom_emp' already exists
+DROP TEMPORARY TABLE IF EXISTS tt_sueldo_prom_emp;
+CREATE TEMPORARY TABLE tt_sueldo_prom_emp(
+	SELECT cuit, AVG(sueldo) "sueldo_promedio"
+		FROM `agencia_personal`.`contratos`
+		GROUP BY cuit);
 
+SELECT * FROM tt_sueldo_prom_emp;
+DESCRIBE tt_sueldo_prom_emp;
 
-
+SELECT tt_sp.cuit "cuit", PER.dni, concat(nombre, " ", apellido) "nombre y apellido",
+	sueldo, tt_sp.sueldo_promedio "sueldo promedio"
+	FROM `agencia_personal`.`personas` PER 
+		INNER JOIN `agencia_personal`.`contratos` CON
+			ON PER.dni=CON.dni
+		INNER JOIN tt_sueldo_prom_emp tt_sp ON CON.cuit=tt_sp.cuit
+	where sueldo > tt_sp.sueldo_promedio
+;
+DROP TEMPORARY TABLE tt_sueldo_prom_emp;
 
 -- 9 – 10 – 11 – 12 – 16
 -- 9) Alumnos que se hayan inscripto a más cursos que Antoine de Saint-Exupery. Mostrar
