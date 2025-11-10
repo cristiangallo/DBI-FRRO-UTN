@@ -62,7 +62,7 @@ SELECT nombre_comun "Nombre común", nombre_cientifico "Nombre científico", dia
 FROM ejemplares EJ 
 	JOIN especies ES ON EJ.id_especie=ES.id 
     left JOIN reclamos REC ON REC.id_ejemplar=EJ.id
-WHERE REC.id is null AND fecha >= DATE_ADD(curdate(), INTERVAL -3 YEAR)
+WHERE REC.id is null AND fecha >= DATE_ADD(curdate(), INTERVAL -3 YEAR)  # DATE_SUB(CURDATE(), INTERVAL 3 YEAR)
 group by ES.id
 HAVING count(REC.id)=0;
 
