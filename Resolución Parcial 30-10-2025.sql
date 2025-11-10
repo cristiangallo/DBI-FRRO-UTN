@@ -64,7 +64,7 @@ FROM ejemplares EJ
     left JOIN reclamos REC ON REC.id_ejemplar=EJ.id
 WHERE REC.id is null AND fecha >= DATE_ADD(curdate(), INTERVAL -3 YEAR)  # DATE_SUB(CURDATE(), INTERVAL 3 YEAR)
 group by ES.id
-HAVING count(REC.id)=0;
+HAVING count(REC.id)=0;  # <-- el having podemos omitirlo porque la condición REC.id is null hace para todos los grupos count(REC.id)=0
 
 /*Errores frecuentes
 	se piden "especies" no ejemplares...
